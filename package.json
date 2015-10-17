@@ -1,0 +1,25 @@
+{
+  "name": "tictactotal",
+  "version": "0.0.1",
+  "description": "TicTacToe in lots of langages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/anicholson/tictactotal.git"
+  },
+  "author": "Andy Nicholson <andrew@anicholson.net>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/anicholson/tictactotal/issues"
+  },
+  "homepage": "https://github.com/anicholson/tictactotal#readme",
+  "devDependencies": {
+    "del": "^2.0.2",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-sass": "^2.0.4"
+  }
+}
