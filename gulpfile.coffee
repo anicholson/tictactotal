@@ -32,6 +32,7 @@ gulp.task 'sass', ->
 gulp.task 'watch', ->
   gulp.watch watch_paths.sass, ['sass']
   gulp.watch watch_paths.ruby, ['ruby']
+  gulp.watch watch_paths.jade, ['html']
 
 gulp.task 'ruby', ->
   app =  gulp.src(source_paths.ruby).pipe(opal())
