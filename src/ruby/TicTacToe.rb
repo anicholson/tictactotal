@@ -42,6 +42,9 @@ module TicTacToe
     end
 
     def move(player, square)
+      return if winner?
+      return if full?
+
       square = @squares[square]
       unless square && square.empty?
         raise SquareAlreadyOccupiedError
@@ -70,7 +73,7 @@ module TicTacToe
                               [2,4,6]
                              ]
       [:X, :O].each do |player|
-        if winning_combinations.any? {|c| c.all? {|s| @squares[s] == player }}
+        if winning_combinations.any? {|c| c.all? {|s| @squares[s].state == player }}
           return player
         end
       end
