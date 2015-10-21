@@ -45,4 +45,4 @@ gulp.task 'ruby', ->
 
 gulp.task 'scripts', ['ruby']
 
-gulp.task 'default', ['watch', 'sass', 'scripts']
+gulp.task 'default', ['watch', 'html', 'sass', 'scripts']

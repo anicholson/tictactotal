@@ -8,21 +8,28 @@ html
     #container
       h1 Tic Tac Total!
 
-      #board
-        ol
-          li
-          li
-          li
+      mixin square(player)
+        .square(class!=player)
+          .content
+            .table
+              .table-cell
 
-          li
-          li
-          li
+      .board-row
+        .board-cols
+          #board
+            +square('x') X
+            +square('empty')
+            +square('empty')
 
-          li
-          li
-          li
+            +square('empty')
+            +square('o') O
+            +square('empty')
+
+            +square('empty')
+            +square('empty')
+            +square('empty')
 
       #messages
 
-    footer
-      p TicTacTotal by andrewdotnich.
+      footer
+        p TicTacTotal by andrewdotnich.
