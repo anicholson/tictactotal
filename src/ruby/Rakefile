@@ -1,0 +1,12 @@
+require 'bundler'
+Bundler.setup
+
+require 'opal'
+require 'opal-jquery'
+
+OUT_PATH= File.dirname(__FILE__) + "/../../public/js"
+
+task :default do
+  Opal.append_path '.'
+  File.binwrite "#{OUT_PATH}/tictactotal.rb.js", Opal::Builder.build('TicTacToe').to_s
+end

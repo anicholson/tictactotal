@@ -3,8 +3,8 @@ sass = require 'gulp-sass'
 concat = require 'gulp-concat'
 merge = require 'gulp-merge'
 minifyCSS = require 'gulp-minify-css'
-opal = require 'gulp-opal'
 jade = require 'gulp-jade'
+run = require 'gulp-run'
 
 source_paths =
   sass: 'src/sass/app.scss'
@@ -35,13 +35,9 @@ gulp.task 'watch', ->
   gulp.watch watch_paths.jade, ['html']
 
 gulp.task 'ruby', ->
-  app =  gulp.src(source_paths.ruby).pipe(opal())
-  glue = gulp.src('lib/opal-glue.js')
-  runtime = gulp.src('node_modules/opal-npm-wrapper/index.js')
+  run('bundle install', cwd: "#{__dirname}/src/ruby").exec()
+  run('bundle exec rake', cwd: "#{__dirname}/src/ruby").exec()
 
-  merge(glue, runtime, app)
-  .pipe(concat('tictactotal.rb.js'))
-  .pipe(gulp.dest('public/js/'))
 
 gulp.task 'scripts', ['ruby']
 
