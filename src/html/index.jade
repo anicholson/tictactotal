@@ -3,13 +3,14 @@ html
   head
     title Tic Tac Total!
     link(href='/css/app.min.css' type='text/css' rel='stylesheet')
-    script(src='/js/tictactotal.rb.js')
+    script(src='/js/jquery-1.11.3.min.js' type='text/javascript')
+    script(src='/js/tictactotal.rb.js' type='text/javascript')
   body
     #container
       h1 Tic Tac Total!
 
-      mixin square(player)
-        .square(class!=player)
+      mixin square(player, position)
+        .square(class!=player data-position!=position)
           .content
             .table
               .table-cell
@@ -17,19 +18,23 @@ html
       .board-row
         .board-cols
           #board
-            +square('x') X
-            +square('empty')
-            +square('empty')
+            +square('empty',0)
+            +square('empty',1)
+            +square('empty',2)
 
-            +square('empty')
-            +square('o') O
-            +square('empty')
+            +square('empty',3)
+            +square('empty',4)
+            +square('empty',5)
 
-            +square('empty')
-            +square('empty')
-            +square('empty')
+            +square('empty',6)
+            +square('empty',7)
+            +square('empty',8)
 
       #messages
+        .error
+        .winner
+
+        button.new-game New Game
 
       footer
         p TicTacTotal by andrewdotnich.

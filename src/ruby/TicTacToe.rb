@@ -1,3 +1,6 @@
+require 'opal'
+require 'opal-jquery'
+
 module TicTacToe
   class Square
     VALID_STATES = [:EMPTY, :O, :X]
@@ -24,8 +27,16 @@ module TicTacToe
       @state = :O
     end
 
+    def O?
+      @state == :O
+    end
+
     def X
       @state = :X
+    end
+
+    def X?
+      @state == :X
     end
 
     def to_s
@@ -34,7 +45,11 @@ module TicTacToe
   end
 
   class Board
-    class SquareAlreadyOccupiedError < Exception; end
+    class SquareAlreadyOccupiedError < Exception
+      def message
+        "Square already occupied!"
+      end
+    end
     attr_reader :squares
 
     def initialize
@@ -92,7 +107,7 @@ module TicTacToe
   end
 
   class Game
-    attr_reader :board, :state
+    attr_reader :board, :state, :error, :winning_player
 
     STATES = [:NEW, :PLAYING, :WON, :DRAWN]
 
@@ -110,14 +125,16 @@ module TicTacToe
       @board.move(@next_player, square)
       update_game_state
       change_player_turn
+      clear_error_state
     rescue => e
       @error = e
-      puts e
-    ensure
-      # Sync DOM
     end
 
     private
+
+    def clear_error_state
+      @error = nil
+    end
 
     def change_player_turn
       @next_player = @next_player == :X ? :O : :X
@@ -137,14 +154,76 @@ module TicTacToe
     end
   end
 
-  game = Game.new
+  class HTMLTicTacToe
+    SQUARE_SELECTOR = '.square'
+    WINNER_SELECTOR = '#messages .winner'
+    ERROR_SELECTOR  = '#messages .error'
+    NEW_GAME_BUTTON = 'button.new-game'
 
-  (0..8).each do |square|
-    game.move(square)
-    puts game.board
-    puts game.state
+    def initialize
+      @game = Game.new
+    end
+
+    def syncDOM
+      display_error_messages
+      display_status_messages
+      update_board
+    end
+
+    def display_error_messages
+      error_div = ::Element[ERROR_SELECTOR]
+      if @game.error
+        error_div.html @game.error.message
+      else
+        error_div.html ''
+      end
+    end
+
+    def display_status_messages
+      winner_div = ::Element[WINNER_SELECTOR]
+
+      if @game.state == :WON
+        winner_div.html "Player #{@game.winning_player} wins!"
+      end
+
+      if @game.state == :DRAWN
+        winner_div.html "It's a tie."
+      end
+    end
+
+    def update_board
+      model_squares = @game.board.squares #Sorry Demeter
+      dom_squares   = ::Element[SQUARE_SELECTOR].to_a
+
+      model_squares.zip(dom_squares).each do |pair|
+        model, dom = pair
+        dom.class_name = "square #{model.state.downcase}"
+      end
+    end
+
+    def setup_event_handlers
+      syncDOM
+
+      ::Element.find(SQUARE_SELECTOR).on :click do |event|
+        target = ::Element[event.current_target]
+
+        square = target.data 'position'
+
+        if square
+          @game.move(square)
+          syncDOM
+        end
+      end
+
+      ::Element.find('button.new-game').on :click do |_event|
+        @game = Game.new
+        syncDOM
+      end
+    end
   end
+end
 
-  puts game.state
-
+Document.ready? do
+  driver = TicTacToe::HTMLTicTacToe.new
+  driver.setup_event_handlers
 end
